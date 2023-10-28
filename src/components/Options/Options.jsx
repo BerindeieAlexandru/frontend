@@ -17,13 +17,13 @@ const Sidebar = ({setSelectedOption}) => {
                 className={classes.button}
                 onClick={() => setSelectedOption("rent")}
             >
-                Rent
+                Reserve
             </button>
             <button
                 className={classes.button}
                 onClick={() => setSelectedOption("reserve")}
             >
-                Reserve
+                Rent
             </button>
             <div className={classes.textArea}>This app comes with the initiative to solve an actual issue related to traffic, that is electric scooters rental.</div>
         </div>
