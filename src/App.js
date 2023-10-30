@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import Locator from "./components/Locator";
 import Header from "./components/Header/Header";
 import Options from "./components/Options/Options";
 import Content from "./components/Content/Content";
