@@ -3,8 +3,12 @@ import {TextField, Button, CircularProgress} from "@mui/material";
 import Map from "../Map/Map";
 import axios from "axios";
 import {log} from "util";
+import useStyles from "./contentStyle";
 
 const Content = ({ selectedOption }) => {
+
+    //style data
+    const classes = useStyles();
 
     // user location
     const [userLocation, setUserLocation] = useState(null);
@@ -31,6 +35,12 @@ const Content = ({ selectedOption }) => {
 
     // map data
     const [mapData, setMapData] = useState(null);
+
+    // check if map is initialized
+    const [mapInitialized, setMapInitialized] = useState(false);
+
+    // check if markers are initialized
+    const [markersInitialized, setMarkersInitialized] = useState(false);
 
     // handle reservation data change
     const handleReservationChange = (e) => {
@@ -65,7 +75,14 @@ const Content = ({ selectedOption }) => {
             center: { lat: latitude, lng: longitude },
             zoom: 15,
         });
+        if (!markersInitialized)
+        {
+            setMarkers(map, scooterdata);
+        }
+    };
 
+    // Function to create markers on the map
+    const setMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
             const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
 
@@ -86,14 +103,15 @@ const Content = ({ selectedOption }) => {
                     // Extract first name, last name, and phone number
                     const { first_name, last_name, phone_number } = el;
 
-                    // Create content for the InfoWindow
-                    let infoWindowContent = `
-                        <div>
-                            <p>First Name: ${first_name}</p>
-                            <p>Last Name: ${last_name}</p>
-                            <p>Phone Number: ${phone_number}</p>
-                        </div>
-                    `;
+                    // Create a div element for the InfoWindow content
+                    const infoWindowContent = document.createElement("div");
+                    infoWindowContent.classList.add(classes.infoWindowContent);
+                    infoWindowContent.innerHTML = `
+                    <p>First Name: ${first_name}</p>
+                    <p>Last Name: ${last_name}</p>
+                    <p>Phone Number: ${phone_number}</p>
+                    <button class="take-button ${classes.takeButton}">Take</button>
+                `;
 
                     // Create an InfoWindow for each marker
                     const infoWindow = new window.google.maps.InfoWindow({
@@ -105,12 +123,10 @@ const Content = ({ selectedOption }) => {
                         if (infoWindow) {
                             infoWindow.close();
                         }
-                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(map, marker);
 
-                        // Create a "Take" button
-                        const takeButton = document.createElement("button");
-                        takeButton.textContent = "Take";
-
+                        // Handle the "Take" button click
+                        const takeButton = infoWindowContent.querySelector(".take-button");
                         takeButton.addEventListener("click", () => {
                             // Send a POST request to update scooter availability
                             axios.post("http://localhost:5000/update-scooter", {
@@ -123,6 +139,7 @@ const Content = ({ selectedOption }) => {
                                         infoWindow.close();
                                         // Remove the marker from the map
                                         marker.setMap(null);
+                                        setScooterdata((prevScooterData) => prevScooterData.filter(scooter => scooter.first_name !== first_name && scooter.last_name !== last_name));
                                     } else {
                                         console.error("Failed to update scooter availability.");
                                     }
@@ -131,11 +148,6 @@ const Content = ({ selectedOption }) => {
                                     console.error("Error updating scooter availability:", error);
                                 });
                         });
-
-                        infoWindowContent += takeButton.outerHTML;
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(map, marker);
-                        setInfoWindow(infoWindow);
                     });
                 }
             }
@@ -183,10 +195,11 @@ const Content = ({ selectedOption }) => {
 
     // initialize google map when user location and scooter data are fetched
     useEffect(() => {
-        if (userLocation && scooterDataLoaded && document.getElementById("map")) {
+        if (selectedOption==="find" || (!mapInitialized && userLocation && scooterDataLoaded && document.getElementById("map"))) {
             initGoogleMap(userLocation.latitude, userLocation.longitude);
+            setMapInitialized(true);
         }
-    }, [userLocation, scooterdata, scooterDataLoaded, initGoogleMap]);
+    }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMap]);
 
     return (
         <div style={{ flex: 1, padding: "20px" }}>
