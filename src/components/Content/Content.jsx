@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {TextField, Button, CircularProgress} from "@mui/material";
-import Map from "../Map/Map";
 import axios from "axios";
 import {log} from "util";
 import useStyles from "./contentStyle";
+import Form from "../Form/Form";
 
 const Content = ({ selectedOption }) => {
 
@@ -222,71 +222,7 @@ const Content = ({ selectedOption }) => {
                 </div>
             )}
             {selectedOption === "reserve" && (
-                <div>
-                    <form>
-                        <div style={{ marginBottom: "10px" }}>
-                            <TextField
-                                label="First Name"
-                                name="firstName"
-                                value={reservationData.firstName}
-                                onChange={handleReservationChange}
-                            />
-                        </div>
-                        <div style={{ marginBottom: "10px" }}>
-                            <TextField
-                                label="Last Name"
-                                name="lastName"
-                                value={reservationData.lastName}
-                                onChange={handleReservationChange}
-                            />
-                        </div>
-                        <div style={{ marginBottom: "10px" }}>
-                            <TextField
-                                label="Phone Number"
-                                name="phoneNumber"
-                                value={reservationData.phoneNumber}
-                                onChange={handleReservationChange}
-                            />
-                        </div>
-                        <div style={{ marginBottom: "10px" }}>
-                            <TextField
-                                label="Start Time"
-                                name="startTime"
-                                type="datetime-local"
-                                value={reservationData.startTime}
-                                onChange={handleReservationChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </div>
-                        <div style={{ marginBottom: "10px" }}>
-                            <TextField
-                                label="End Time"
-                                name="endTime"
-                                type="datetime-local"
-                                value={reservationData.endTime}
-                                onChange={handleReservationChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <p>Current Location</p>
-                            <p>Latitude: {userLocation.latitude}; Longitude: {userLocation.longitude}</p>
-                        </div>
-                        <div>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleReservationSubmit}
-                            >
-                                Send Reservation
-                            </Button>
-                        </div>
-                    </form>
-                </div>
+                <Form reservationData={reservationData} handleReservationChange={handleReservationChange} userLocation={userLocation} handleReservationSubmit={handleReservationSubmit}/>
             )}
         </div>
     );
