@@ -5,6 +5,8 @@ import {log} from "util";
 import useStyles from "./contentStyle";
 import Form from "../Form/Form";
 
+import customMarkerIcon from "./scooter1.png";
+const customMarkerIconSize = new window.google.maps.Size(40, 40);
 const Content = ({ selectedOption }) => {
 
     //style data
@@ -28,13 +30,11 @@ const Content = ({ selectedOption }) => {
         endTime: "",
         location: "",
         available: "yes",
+        price: 0,
     });
 
     // info window for scooters on map
     const [infoWindow, setInfoWindow] = useState(null);
-
-    // map data
-    const [mapData, setMapData] = useState(null);
 
     // check if map is initialized
     const [mapInitialized, setMapInitialized] = useState(false);
@@ -58,9 +58,10 @@ const Content = ({ selectedOption }) => {
             endTime: reservationData.endTime,
             location: `Latitude: ${userLocation.latitude}; Longitude: ${userLocation.longitude}`,
             available: "yes",
+            price: reservationData.price,
         };
 
-        axios.post("http://localhost:5000/create-reservation", dataToSend)
+        axios.post("http://localhost:5000/add-scooter", dataToSend)
             .then((response) => {
                 console.log(response.data);
             })
@@ -84,6 +85,7 @@ const Content = ({ selectedOption }) => {
     // Function to create markers on the map
     const setMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
+            console.log(el)
             const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
 
             if (locationMatch && locationMatch.length === 3) {
@@ -98,10 +100,14 @@ const Content = ({ selectedOption }) => {
                         },
                         map,
                         title: "Scooter",
+                        icon: {
+                            url: customMarkerIcon,
+                            scaledSize: customMarkerIconSize,
+                        },
                     });
 
                     // Extract first name, last name, and phone number
-                    const { first_name, last_name, phone_number } = el;
+                    const { first_name, last_name, phone_number, price_per_hour } = el;
 
                     // Create a div element for the InfoWindow content
                     const infoWindowContent = document.createElement("div");
@@ -110,6 +116,7 @@ const Content = ({ selectedOption }) => {
                     <p>First Name: ${first_name}</p>
                     <p>Last Name: ${last_name}</p>
                     <p>Phone Number: ${phone_number}</p>
+                    <p>Price: ${price_per_hour} €/h</p>
                     <button class="take-button ${classes.takeButton}">Take</button>
                 `;
 
@@ -176,7 +183,7 @@ const Content = ({ selectedOption }) => {
 
     // fetch scooter data and set variable for loaded data true
     useEffect(() => {
-        fetch("http://localhost:5000/get-reservation-data")
+        fetch("http://localhost:5000/available-scooters")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
@@ -204,24 +211,24 @@ const Content = ({ selectedOption }) => {
     return (
         <div style={{ flex: 1, padding: "20px" }}>
             {selectedOption === "find" && (
-                <div>
+                <div className={classes.mapContainer}>
                     {userLocation ? (
                         <div>
-                            <div id="map" style={{ width: "100%", height: "600px" }}></div>
+                            <div id="map" style={{ width: "100%", height: "85vh", borderRadius:"15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative"}}></div>
                         </div>
                     ) : (
                         <CircularProgress />
                     )}
                 </div>
             )}
-            {selectedOption === "rent" && userLocation && (
+            {selectedOption === "reserve" && userLocation && (
                 <div>
                     <p>Renter's Location:</p>
                     <p>Latitude: {userLocation.latitude}</p>
                     <p>Longitude: {userLocation.longitude}</p>
                 </div>
             )}
-            {selectedOption === "reserve" && (
+            {selectedOption === "rent" && (
                 <Form reservationData={reservationData} handleReservationChange={handleReservationChange} userLocation={userLocation} handleReservationSubmit={handleReservationSubmit}/>
             )}
         </div>

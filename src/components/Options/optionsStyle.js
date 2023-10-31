@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
         display: "flex",
         flexDirection: "column",
-        height: "70vh",
+        height: "81vh",
         justifyContent: "space-between",
         marginTop: "15px",
     },

@@ -28,6 +28,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
         reservationData.phoneNumber = "";
         reservationData.startTime = "";
         reservationData.endTime = "";
+        reservationData.price = 0;
         setFormCleared(false);
     };
     return (
@@ -105,10 +106,24 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                 </Grid>
                 <Grid item xs={12}>
                     <Typography className={classes.input} variant="h6">Current Location</Typography>
-                    <Typography className={classes.input} style={{ marginTop: "8px"}}>
+                    <Typography className={classes.input} style={{ marginTop: "16px"}}>
                         Latitude: {userLocation.latitude}; Longitude: {userLocation.longitude}
                     </Typography>
                 </Grid>
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    style={{ marginTop: "16px"}}
+                    variant="outlined"
+                    className={classes.input}
+                    required
+                    fullWidth
+                    label="Price (€/hour)"
+                    name="price"
+                    type="number"
+                    value={reservationData.price}
+                    onChange={handleReservationChange}
+                />
             </Grid>
             <div className={classes.submitButtonContainer}>
             <Box mt={2}>

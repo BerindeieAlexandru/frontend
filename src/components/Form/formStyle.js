@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        minHeight: "75vh",
+        minHeight: "85vh",
     },
     formBox: {
         background: "linear-gradient(45deg, #212ff3 20%, #9C27B0 50%, #880E4F 80%)",

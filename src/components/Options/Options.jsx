@@ -19,14 +19,14 @@ const Sidebar = ({setSelectedOption}) => {
                 className={classes.button}
                 onClick={() => setSelectedOption("rent")}
                 >
-                Reserve
+                Rent
             </Button>
             <Button
                 variant="outlined" style={{color:"white", backgroundColor:"rgba(255, 255, 255, 0.3)"}}
                 className={classes.button}
                 onClick={() => setSelectedOption("reserve")}
             >
-                Rent
+                Reserve
             </Button>
             <div className={classes.textArea}>This app comes with the initiative to solve an actual issue related to traffic, that is electric scooters rental.</div>
         </div>
