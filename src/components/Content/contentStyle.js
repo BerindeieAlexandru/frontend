@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
             transform: "scale(1.05)",
         },
         mapContainer: {
-            flex: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",  // Set the width to 100% to fill the screen
-            height: "100vh", // Set the height to 100vh to fill the viewport height
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100vh",
+            zIndex: 1
         },
     },
 }));

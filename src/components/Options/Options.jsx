@@ -8,27 +8,30 @@ const Sidebar = ({setSelectedOption}) => {
 
     return (
         <div className={classes.sidebar}>
-            <Button style={{color:"white", backgroundColor:"rgba(255, 255, 255, 0.3)"}}
-                variant="outlined"
+            <Button
+                style={{ backgroundColor: "#3f51b5", marginBottom: "18px", width: "100%" }}
+                variant="contained"
                 onClick={() => setSelectedOption("find")}
             >
                 Find
             </Button>
-            <Button style={{color:"white", backgroundColor:"rgba(255, 255, 255, 0.3)"}}
-                variant="outlined"
-                className={classes.button}
+            <Button
+                style={{ backgroundColor: "#9c27b0", marginBottom: "18px", width: "100%" }}
+                variant="contained"
                 onClick={() => setSelectedOption("rent")}
-                >
+            >
                 Rent
             </Button>
             <Button
-                variant="outlined" style={{color:"white", backgroundColor:"rgba(255, 255, 255, 0.3)"}}
-                className={classes.button}
+                style={{ backgroundColor: "#e91e63", marginBottom: "18px", width: "100%" }}
+                variant="contained"
                 onClick={() => setSelectedOption("reserve")}
             >
                 Reserve
             </Button>
-            <div className={classes.textArea}>This app comes with the initiative to solve an actual issue related to traffic, that is electric scooters rental.</div>
+            <div className={classes.textArea}>
+                This app comes with the initiative to solve an actual issue related to traffic, that is electric scooters rental.
+            </div>
         </div>
     );
 }

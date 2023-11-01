@@ -214,7 +214,7 @@ const Content = ({ selectedOption }) => {
                 <div className={classes.mapContainer}>
                     {userLocation ? (
                         <div>
-                            <div id="map" style={{ width: "100%", height: "85vh", borderRadius:"15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative"}}></div>
+                            <div id="map" style={{width: "100%", height: "85vh", borderRadius:"15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative"}}></div>
                         </div>
                     ) : (
                         <CircularProgress />
