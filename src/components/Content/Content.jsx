@@ -212,17 +212,29 @@ const Content = ({ selectedOption }) => {
                     const form = document.createElement("form");
                     // Add form fields for first name, last name, phone number, and starting/ending date and time pickers
                     form.innerHTML = `
-                        <label for="firstName">First Name:</label>
-                        <input type="text" id="firstName" name="firstName" required>
-                        <label for="lastName">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" required>
-                        <label for="phoneNumber">Phone Number:</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" required>
-                        <label for="startTime">Start Time:</label>
-                        <input type="datetime-local" id="startTime" name="startTime" required>
-                        <label for="endTime">End Time:</label>
-                        <input type="datetime-local" id="endTime" name="endTime" required>
-                        <button type="submit">Reserve</button>
+                        <form class="${classes.form}">
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="firstName">First Name:</label>
+                            <input class="${classes.input}" type="text" id="firstName" name="firstName" required />
+                        </div>
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="lastName">Last Name:</label>
+                            <input class="${classes.input}" type="text" id="lastName" name="lastName" required />
+                        </div>
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="phoneNumber">Phone Number:</label>
+                            <input class="${classes.input}" type="text" id="phoneNumber" name="phoneNumber" required />
+                        </div>
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="startTime">Start Time:</label>
+                            <input class="${classes.input}" type="datetime-local" id="startTime" name="startTime" required />
+                        </div>
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="endTime">End Time:</label>
+                            <input class="${classes.input}" type="datetime-local" id="endTime" name="endTime" required />
+                        </div>
+                        <button class="reserve-button ${classes.takeButton}">Reserve</button>
+                    </form>
                     `;
                     infoWindowContent.appendChild(form);
                     // Create an InfoWindow for each marker
@@ -238,7 +250,6 @@ const Content = ({ selectedOption }) => {
                             // Handle form submission
                             form.addEventListener("submit", (e) => {
                                 e.preventDefault();
-                                // Extract form data and send it to the server for reservation
                                 const formData = new FormData(form);
                                 const dataToSend = {
                                     firstName: formData.get("firstName"),
@@ -247,19 +258,26 @@ const Content = ({ selectedOption }) => {
                                     startTime: formData.get("startTime"),
                                     endTime: formData.get("endTime"),
                                     location: `Latitude: ${userLocation.latitude}; Longitude: ${userLocation.longitude}`,
-                                    available: "no",
-                                    price: reservationData.price,
+                                    available: "yes",
                                 };
-
-                                axios.post("http://localhost:5000/add-scooter", dataToSend)
+                                //to add in a db the reservation
+                                axios.post("http://localhost:5000/update-scooter", {
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                })
                                     .then((response) => {
-                                        console.log(response.data);
-                                        // Close the InfoWindow after successful submission
-                                        infoWindow.close();
-                                        // Optionally, you can update your markers to reflect the reservation on the map.
+                                        if (response.status === 200) {
+                                            // Close the InfoWindow
+                                            infoWindow.close();
+                                            // Remove the marker from the map
+                                            marker.setMap(null);
+                                            setScooterdata((prevScooterData) => prevScooterData.filter(scooter => scooter.first_name !== first_name && scooter.last_name !== last_name));
+                                        } else {
+                                            console.error("Failed to update scooter availability.");
+                                        }
                                     })
                                     .catch((error) => {
-                                        console.error(error);
+                                        console.error("Error updating scooter availability:", error);
                                     });
                             }
                         );

@@ -24,14 +24,24 @@ const useStyles = makeStyles((theme) => ({
             color: "white",
             transform: "scale(1.05)",
         },
-        mapContainer: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100vh",
-            zIndex: 1
-        },
+    },
+    form: {
+        display: "flex",
+        flexDirection: "column",
+    },
+    formGroup: {
+        display: "flex",
+        flexDirection: "column",
+        marginBottom: theme.spacing(2),
+    },
+    label: {
+        fontWeight: "bold",
+        marginBottom: theme.spacing(1),
+    },
+    input: {
+        padding: theme.spacing(1),
+        border: "1px solid #ccc",
+        borderRadius: theme.spacing(0.5),
     },
 }));
 
