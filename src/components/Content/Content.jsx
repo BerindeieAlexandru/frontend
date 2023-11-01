@@ -39,8 +39,14 @@ const Content = ({ selectedOption }) => {
     // check if map is initialized
     const [mapInitialized, setMapInitialized] = useState(false);
 
-    // check if markers are initialized
+    // check if map is initialized for reservation
+    const [rmapInitialized, setrMapInitialized] = useState(false);
+
+    // check if markers are initialized for finding a scooter
     const [markersInitialized, setMarkersInitialized] = useState(false);
+
+    // check if markers are initialized for reservation
+    const [rmarkersInitialized, setrMarkersInitialized] = useState(false);
 
     // handle reservation data change
     const handleReservationChange = (e) => {
@@ -70,7 +76,7 @@ const Content = ({ selectedOption }) => {
             });
     };
 
-    // initialize google map
+    // initialize google map for finding a scooter
     const initGoogleMap = (latitude, longitude) => {
         const map = new window.google.maps.Map(document.getElementById("map"), {
             center: { lat: latitude, lng: longitude },
@@ -82,7 +88,18 @@ const Content = ({ selectedOption }) => {
         }
     };
 
-    // Function to create markers on the map
+    // initialize google map for reserving a scooter
+    const initGoogleMapReserve = (latitude, longitude) => {
+        const map = new window.google.maps.Map(document.getElementById("resmap"), {
+            center: { lat: latitude, lng: longitude },
+            zoom: 15,
+        });
+        if (!markersInitialized) {
+            setrMarkers(map, scooterdata);
+        }
+    }
+
+    // Function to create markers on the map for finding a scooter
     const setMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
             console.log(el)
@@ -161,6 +178,98 @@ const Content = ({ selectedOption }) => {
         });
     };
 
+    // Function to create markers on the map for reserving a scooter
+    const setrMarkers = (map, scooterdata) => {
+        scooterdata.forEach((el) => {
+            console.log(el)
+            const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
+
+            if (locationMatch && locationMatch.length === 3) {
+                const latitude = parseFloat(locationMatch[1]);
+                const longitude = parseFloat(locationMatch[2]);
+
+                if (!isNaN(latitude) && !isNaN(longitude) && isFinite(latitude) && isFinite(longitude)) {
+                    const marker = new window.google.maps.Marker({
+                        position: {
+                            lat: latitude,
+                            lng: longitude,
+                        },
+                        map,
+                        title: "Scooter",
+                        icon: {
+                            url: customMarkerIcon,
+                            scaledSize: customMarkerIconSize,
+                        },
+                    });
+
+                    // Extract first name, last name, and phone number
+                    const { first_name, last_name, phone_number, price_per_hour } = el;
+
+                    // Create a div element for the InfoWindow content
+                    const infoWindowContent = document.createElement("div");
+                    infoWindowContent.classList.add(classes.infoWindowContent);
+
+                    const form = document.createElement("form");
+                    // Add form fields for first name, last name, phone number, and starting/ending date and time pickers
+                    form.innerHTML = `
+                        <label for="firstName">First Name:</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                        <label for="phoneNumber">Phone Number:</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" required>
+                        <label for="startTime">Start Time:</label>
+                        <input type="datetime-local" id="startTime" name="startTime" required>
+                        <label for="endTime">End Time:</label>
+                        <input type="datetime-local" id="endTime" name="endTime" required>
+                        <button type="submit">Reserve</button>
+                    `;
+                    infoWindowContent.appendChild(form);
+                    // Create an InfoWindow for each marker
+                    const infoWindow = new window.google.maps.InfoWindow({
+                        content: infoWindowContent,
+                    });
+
+                    marker.addListener("click", () => {
+                        if (infoWindow) {
+                            infoWindow.close();
+                        }
+                        infoWindow.open(map, marker);
+                            // Handle form submission
+                            form.addEventListener("submit", (e) => {
+                                e.preventDefault();
+                                // Extract form data and send it to the server for reservation
+                                const formData = new FormData(form);
+                                const dataToSend = {
+                                    firstName: formData.get("firstName"),
+                                    lastName: formData.get("lastName"),
+                                    phoneNumber: formData.get("phoneNumber"),
+                                    startTime: formData.get("startTime"),
+                                    endTime: formData.get("endTime"),
+                                    location: `Latitude: ${userLocation.latitude}; Longitude: ${userLocation.longitude}`,
+                                    available: "no",
+                                    price: reservationData.price,
+                                };
+
+                                axios.post("http://localhost:5000/add-scooter", dataToSend)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        // Close the InfoWindow after successful submission
+                                        infoWindow.close();
+                                        // Optionally, you can update your markers to reflect the reservation on the map.
+                                    })
+                                    .catch((error) => {
+                                        console.error(error);
+                                    });
+                            }
+                        );
+                        }
+                    );
+                }
+            }
+        });
+    };
+
     // get user location
     useEffect(() => {
         if (!userLocation) {
@@ -200,13 +309,21 @@ const Content = ({ selectedOption }) => {
             });
     }, []);
 
-    // initialize google map when user location and scooter data are fetched
+    // initialize google map when user location and scooter data are fetched for finding a scooter
     useEffect(() => {
         if (selectedOption==="find" || (!mapInitialized && userLocation && scooterDataLoaded && document.getElementById("map"))) {
             initGoogleMap(userLocation.latitude, userLocation.longitude);
             setMapInitialized(true);
         }
     }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMap]);
+
+    // initialize google map when user location and scooter data are fetched for reserving a scooter
+    useEffect(() => {
+        if (selectedOption==="reserve" || (!mapInitialized && userLocation && scooterDataLoaded && document.getElementById("resmap"))) {
+            initGoogleMapReserve(userLocation.latitude, userLocation.longitude);
+            setrMapInitialized(true);
+        }
+    }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMapReserve]);
 
     return (
         <div style={{ flex: 1, padding: "20px" }}>
@@ -222,10 +339,14 @@ const Content = ({ selectedOption }) => {
                 </div>
             )}
             {selectedOption === "reserve" && userLocation && (
-                <div>
-                    <p>Renter's Location:</p>
-                    <p>Latitude: {userLocation.latitude}</p>
-                    <p>Longitude: {userLocation.longitude}</p>
+                <div className={classes.mapContainer}>
+                    {userLocation ? (
+                        <div>
+                            <div id="resmap" style={{ width: "100%", height: "85vh", borderRadius: "15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative" }}></div>
+                        </div>
+                    ) : (
+                        <CircularProgress />
+                    )}
                 </div>
             )}
             {selectedOption === "rent" && (
