@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: "15%",
     },
     formBox: {
-        background: "linear-gradient(45deg, #212ff3 20%, #9C27B0 50%, #880E4F 80%)",
+        background: "linear-gradient(45deg, rgba(33, 47, 243, 0.85) 20%, rgba(156, 39, 176, 0.95) 50%, rgba(136, 14, 79, 0.85) 80%)",
         padding: "20px",
         borderRadius: "10px !important",
         border: "1px solid #000",

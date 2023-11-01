@@ -6,11 +6,11 @@ const Header = () => {
     const classes = useStyles();
 
     return (
-        <Paper className={classes.header} elevation={3}>
+        <div className={classes.header}>
             <Typography variant="h4" className={classes.headerText}>
                 Ecomobility
             </Typography>
-        </Paper>
+        </div>
     );
 }
 
