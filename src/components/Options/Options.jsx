@@ -9,21 +9,21 @@ const Sidebar = ({setSelectedOption}) => {
     return (
         <div className={classes.sidebar}>
             <Button
-                style={{ backgroundColor: "#3f51b5", marginBottom: "18px", width: "100%" }}
+                style={{ backgroundColor: "rgba(63, 81, 181, 0.8)", marginBottom: "18px", width: "100%" }}
                 variant="contained"
                 onClick={() => setSelectedOption("find")}
             >
                 Find
             </Button>
             <Button
-                style={{ backgroundColor: "#9c27b0", marginBottom: "18px", width: "100%" }}
+                style={{ backgroundColor: "rgba(156, 39, 176, 0.8)", marginBottom: "18px", width: "100%" }}
                 variant="contained"
                 onClick={() => setSelectedOption("rent")}
             >
                 Rent
             </Button>
             <Button
-                style={{ backgroundColor: "#e91e63", marginBottom: "18px", width: "100%" }}
+                style={{ backgroundColor: "rgba(233, 30, 99, 0.8)", marginBottom: "18px", width: "100%" }}
                 variant="contained"
                 onClick={() => setSelectedOption("reserve")}
             >

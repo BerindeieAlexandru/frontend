@@ -344,12 +344,12 @@ const Content = ({ selectedOption }) => {
     }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMapReserve]);
 
     return (
-        <div style={{ flex: 1, padding: "20px" }}>
+        <div style={{position:"absolute", top:"0vh", left: "0vh", width:"100%", zIndex:"1"}}>
             {selectedOption === "find" && (
                 <div className={classes.mapContainer}>
                     {userLocation ? (
                         <div>
-                            <div id="map" style={{width: "100%", height: "85vh", borderRadius:"15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative"}}></div>
+                            <div id="map" style={{width: "100%", height: "98vh", borderRadius:"15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative"}}></div>
                         </div>
                     ) : (
                         <CircularProgress />
@@ -360,7 +360,7 @@ const Content = ({ selectedOption }) => {
                 <div className={classes.mapContainer}>
                     {userLocation ? (
                         <div>
-                            <div id="resmap" style={{ width: "100%", height: "85vh", borderRadius: "15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative" }}></div>
+                            <div id="resmap" style={{ width: "100%", height: "98vh", borderRadius: "15px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)", border: "1px solid #ddd", overflow: "hidden", position: "relative" }}></div>
                         </div>
                     ) : (
                         <CircularProgress />
