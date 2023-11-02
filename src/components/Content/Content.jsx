@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {TextField, Button, CircularProgress} from "@mui/material";
+import {CircularProgress} from "@mui/material";
 import axios from "axios";
 import useStyles from "./contentStyle";
 import Form from "../Form/Form";
@@ -31,20 +31,9 @@ const Content = ({ selectedOption }) => {
         available: "yes",
         price: 0,
     });
-    // info window for scooters on map
-    const [infoWindow, setInfoWindow] = useState(null);
 
     // check if map is initialized
     const [mapInitialized, setMapInitialized] = useState(false);
-
-    // check if map is initialized for reservation
-    const [rmapInitialized, setrMapInitialized] = useState(false);
-
-    // check if markers are initialized for finding a scooter
-    const [markersInitialized, setMarkersInitialized] = useState(false);
-
-    // check if markers are initialized for reservation
-    const [rmarkersInitialized, setrMarkersInitialized] = useState(false);
 
     // handle reservation data change
     const handleRentalChange = (e) => {
@@ -80,10 +69,7 @@ const Content = ({ selectedOption }) => {
             center: { lat: latitude, lng: longitude },
             zoom: 15,
         });
-        if (!markersInitialized)
-        {
             setMarkers(map, scooterdata);
-        }
     };
 
     // initialize google map for reserving a scooter
@@ -92,10 +78,8 @@ const Content = ({ selectedOption }) => {
             center: { lat: latitude, lng: longitude },
             zoom: 15,
         });
-        if (!markersInitialized) {
-            setrMarkers(map, scooterdata);
-        }
-    }
+        setrMarkers(map, scooterdata);
+    };
 
     // Function to create markers on the map for finding a scooter
     const setMarkers = (map, scooterdata) => {
@@ -348,7 +332,6 @@ const Content = ({ selectedOption }) => {
     useEffect(() => {
         if (selectedOption==="reserve" || (!mapInitialized && userLocation && scooterDataLoaded && document.getElementById("resmap"))) {
             initGoogleMapReserve(userLocation.latitude, userLocation.longitude);
-            setrMapInitialized(true);
         }
     }, [selectedOption, userLocation, scooterDataLoaded, mapInitialized, initGoogleMapReserve]);
 
