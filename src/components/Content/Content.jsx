@@ -21,7 +21,7 @@ const Content = ({ selectedOption }) => {
     const [scooterDataLoaded, setScooterDataLoaded] = useState(false);
 
     // reservation data
-    const [reservationData, setReservationData] = useState({
+    const [rentData, setRentData] = useState({
         firstName: "",
         lastName: "",
         phoneNumber: "",
@@ -47,22 +47,22 @@ const Content = ({ selectedOption }) => {
     const [rmarkersInitialized, setrMarkersInitialized] = useState(false);
 
     // handle reservation data change
-    const handleReservationChange = (e) => {
+    const handleRentalChange = (e) => {
         const { name, value } = e.target;
-        setReservationData({ ...reservationData, [name]: value });
+        setRentData({ ...rentData, [name]: value });
     };
 
     // handle reservation submit
-    const handleReservationSubmit = () => {
+    const handleRentalSubmit = () => {
         const dataToSend = {
-            firstName: reservationData.firstName,
-            lastName: reservationData.lastName,
-            phoneNumber: reservationData.phoneNumber,
-            startTime: reservationData.startTime,
-            endTime: reservationData.endTime,
+            firstName: rentData.firstName,
+            lastName: rentData.lastName,
+            phoneNumber: rentData.phoneNumber,
+            startTime: rentData.startTime,
+            endTime: rentData.endTime,
             location: `Latitude: ${userLocation.latitude}; Longitude: ${userLocation.longitude}`,
             available: "yes",
-            price: reservationData.price,
+            price: rentData.price,
         };
 
         axios.post("http://localhost:5000/add-scooter", dataToSend)
@@ -100,7 +100,6 @@ const Content = ({ selectedOption }) => {
     // Function to create markers on the map for finding a scooter
     const setMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
-            // console.log(el)
             const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
 
             if (locationMatch && locationMatch.length === 3) {
@@ -362,7 +361,7 @@ const Content = ({ selectedOption }) => {
                 </div>
             )}
             {selectedOption === "rent" && (
-                <Form reservationData={reservationData} handleReservationChange={handleReservationChange} userLocation={userLocation} handleReservationSubmit={handleReservationSubmit}/>
+                <Form rentData={rentData} handleRentalChange={handleRentalChange} userLocation={userLocation} handleRentalSubmit={handleRentalSubmit}/>
             )}
         </div>
     );

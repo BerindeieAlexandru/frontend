@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {TextField, Button, Typography, Grid, Box} from "@mui/material";
 import useStyles from "./formStyle";
 
-const Form = ({reservationData, handleReservationChange, userLocation, handleReservationSubmit}) => {
+const Form = ({rentData, handleReservationChange, userLocation, handleReservationSubmit}) => {
     const classes = useStyles();
     const [confirmationMessage, setConfirmationMessage] = useState("");
     const [formCleared, setFormCleared] = useState(false);
@@ -23,12 +23,12 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
     }, [confirmationMessage]);
 
     const clearForm = () => {
-        reservationData.firstName = "";
-        reservationData.lastName = "";
-        reservationData.phoneNumber = "";
-        reservationData.startTime = "";
-        reservationData.endTime = "";
-        reservationData.price = 0;
+        rentData.firstName = "";
+        rentData.lastName = "";
+        rentData.phoneNumber = "";
+        rentData.startTime = "";
+        rentData.endTime = "";
+        rentData.price = 0;
         setFormCleared(false);
     };
     return (
@@ -44,7 +44,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                         fullWidth
                         label="First Name"
                         name="firstName"
-                        value={reservationData.firstName}
+                        value={rentData.firstName}
                         onChange={handleReservationChange}
                     />
                 </Grid>
@@ -56,7 +56,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                         fullWidth
                         label="Last Name"
                         name="lastName"
-                        value={reservationData.lastName}
+                        value={rentData.lastName}
                         onChange={handleReservationChange}
                     />
                 </Grid>
@@ -68,7 +68,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                         fullWidth
                         label="Phone Number"
                         name="phoneNumber"
-                        value={reservationData.phoneNumber}
+                        value={rentData.phoneNumber}
                         onChange={handleReservationChange}
                     />
                 </Grid>
@@ -81,7 +81,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                         label="Start Time"
                         name="startTime"
                         type="datetime-local"
-                        value={reservationData.startTime}
+                        value={rentData.startTime}
                         onChange={handleReservationChange}
                         InputLabelProps={{
                             shrink: true,
@@ -97,7 +97,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                         label="End Time"
                         name="endTime"
                         type="datetime-local"
-                        value={reservationData.endTime}
+                        value={rentData.endTime}
                         onChange={handleReservationChange}
                         InputLabelProps={{
                             shrink: true,
@@ -121,7 +121,7 @@ const Form = ({reservationData, handleReservationChange, userLocation, handleRes
                     label="Price (€/hour)"
                     name="price"
                     type="number"
-                    value={reservationData.price}
+                    value={rentData.price}
                     onChange={handleReservationChange}
                 />
             </Grid>
