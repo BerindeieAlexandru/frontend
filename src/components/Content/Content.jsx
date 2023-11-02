@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {TextField, Button, CircularProgress} from "@mui/material";
 import axios from "axios";
-import {log} from "util";
 import useStyles from "./contentStyle";
 import Form from "../Form/Form";
 
@@ -32,7 +31,6 @@ const Content = ({ selectedOption }) => {
         available: "yes",
         price: 0,
     });
-
     // info window for scooters on map
     const [infoWindow, setInfoWindow] = useState(null);
 
@@ -69,7 +67,7 @@ const Content = ({ selectedOption }) => {
 
         axios.post("http://localhost:5000/add-scooter", dataToSend)
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -102,7 +100,7 @@ const Content = ({ selectedOption }) => {
     // Function to create markers on the map for finding a scooter
     const setMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
-            console.log(el)
+            // console.log(el)
             const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
 
             if (locationMatch && locationMatch.length === 3) {
@@ -181,7 +179,6 @@ const Content = ({ selectedOption }) => {
     // Function to create markers on the map for reserving a scooter
     const setrMarkers = (map, scooterdata) => {
         scooterdata.forEach((el) => {
-            console.log(el)
             const locationMatch = el.location.match(/Latitude: ([-+]?\d*\.\d+|\d+); Longitude: ([-+]?\d*\.\d+|\d+)/);
 
             if (locationMatch && locationMatch.length === 3) {
@@ -213,6 +210,8 @@ const Content = ({ selectedOption }) => {
                     // Add form fields for first name, last name, phone number, and starting/ending date and time pickers
                     form.innerHTML = `
                         <form class="${classes.form}">
+                        <input type="hidden" name="first_name" id="first_name" value="${first_name}" />
+                        <input type="hidden" name="last_name" id="last_name" value="${last_name}" />
                         <div class="${classes.formGroup}">
                             <label class="${classes.label}" htmlFor="firstName">First Name:</label>
                             <input class="${classes.input}" type="text" id="firstName" name="firstName" required />
@@ -241,7 +240,6 @@ const Content = ({ selectedOption }) => {
                     const infoWindow = new window.google.maps.InfoWindow({
                         content: infoWindowContent,
                     });
-
                     marker.addListener("click", () => {
                         if (infoWindow) {
                             infoWindow.close();
@@ -252,26 +250,24 @@ const Content = ({ selectedOption }) => {
                                 e.preventDefault();
                                 const formData = new FormData(form);
                                 const dataToSend = {
+                                    owner_first_name: formData.get("first_name"),
+                                    owner_last_name: formData.get("last_name"),
                                     firstName: formData.get("firstName"),
                                     lastName: formData.get("lastName"),
                                     phoneNumber: formData.get("phoneNumber"),
                                     startTime: formData.get("startTime"),
                                     endTime: formData.get("endTime"),
-                                    location: `Latitude: ${userLocation.latitude}; Longitude: ${userLocation.longitude}`,
-                                    available: "yes",
+                                    location: `Latitude: ${latitude}; Longitude: ${longitude}`,
                                 };
+                                console.log(dataToSend);
                                 //to add in a db the reservation
-                                axios.post("http://localhost:5000/update-scooter", {
-                                    first_name: first_name,
-                                    last_name: last_name,
-                                })
+                                axios.post("http://localhost:5000/add-reservation", dataToSend)
                                     .then((response) => {
-                                        if (response.status === 200) {
+                                        if (response.status === 201) {
                                             // Close the InfoWindow
                                             infoWindow.close();
                                             // Remove the marker from the map
                                             marker.setMap(null);
-                                            setScooterdata((prevScooterData) => prevScooterData.filter(scooter => scooter.first_name !== first_name && scooter.last_name !== last_name));
                                         } else {
                                             console.error("Failed to update scooter availability.");
                                         }
@@ -296,7 +292,6 @@ const Content = ({ selectedOption }) => {
                     (position) => {
                         const {latitude, longitude} = position.coords;
                         setUserLocation({latitude, longitude});
-                        console.log("User location obtained.")
                     },
                     (error) => {
                         console.error("Error getting user location:", error);
@@ -318,7 +313,6 @@ const Content = ({ selectedOption }) => {
                 return response.json();
             })
             .then((data) => {
-                console.log("Scooter data obtained.")
                 setScooterdata(data);
                 setScooterDataLoaded(true);
             })
