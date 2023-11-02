@@ -2,13 +2,13 @@ import React, {useEffect, useState} from "react";
 import {TextField, Button, Typography, Grid, Box} from "@mui/material";
 import useStyles from "./formStyle";
 
-const Form = ({rentData, handleReservationChange, userLocation, handleReservationSubmit}) => {
+const Form = ({rentData, handleRentalChange, userLocation, handleRentalSubmit}) => {
     const classes = useStyles();
     const [confirmationMessage, setConfirmationMessage] = useState("");
     const [formCleared, setFormCleared] = useState(false);
 
     const handleConfirmation = () => {
-        handleReservationSubmit();
+        handleRentalSubmit();
         setConfirmationMessage("Reservation submitted successfully!");
         setFormCleared(true);
     };
@@ -23,13 +23,15 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
     }, [confirmationMessage]);
 
     const clearForm = () => {
-        rentData.firstName = "";
-        rentData.lastName = "";
-        rentData.phoneNumber = "";
-        rentData.startTime = "";
-        rentData.endTime = "";
-        rentData.price = 0;
-        setFormCleared(false);
+        if (!formCleared) {
+            rentData.firstName = "";
+            rentData.lastName = "";
+            rentData.phoneNumber = "";
+            rentData.startTime = "";
+            rentData.endTime = "";
+            rentData.price = 0;
+            setFormCleared(false);
+        }
     };
     return (
         <div className={classes.container}>
@@ -45,7 +47,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                         label="First Name"
                         name="firstName"
                         value={rentData.firstName}
-                        onChange={handleReservationChange}
+                        onChange={handleRentalChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -57,7 +59,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                         label="Last Name"
                         name="lastName"
                         value={rentData.lastName}
-                        onChange={handleReservationChange}
+                        onChange={handleRentalChange}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -69,7 +71,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                         label="Phone Number"
                         name="phoneNumber"
                         value={rentData.phoneNumber}
-                        onChange={handleReservationChange}
+                        onChange={handleRentalChange}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -82,7 +84,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                         name="startTime"
                         type="datetime-local"
                         value={rentData.startTime}
-                        onChange={handleReservationChange}
+                        onChange={handleRentalChange}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -98,7 +100,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                         name="endTime"
                         type="datetime-local"
                         value={rentData.endTime}
-                        onChange={handleReservationChange}
+                        onChange={handleRentalChange}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -122,7 +124,7 @@ const Form = ({rentData, handleReservationChange, userLocation, handleReservatio
                     name="price"
                     type="number"
                     value={rentData.price}
-                    onChange={handleReservationChange}
+                    onChange={handleRentalChange}
                 />
             </Grid>
             <div className={classes.submitButtonContainer}>

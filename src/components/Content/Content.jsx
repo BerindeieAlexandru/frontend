@@ -127,10 +127,18 @@ const Content = ({ selectedOption }) => {
                     const infoWindowContent = document.createElement("div");
                     infoWindowContent.classList.add(classes.infoWindowContent);
                     infoWindowContent.innerHTML = `
-                    <p>First Name: ${first_name}</p>
-                    <p>Last Name: ${last_name}</p>
-                    <p>Phone Number: ${phone_number}</p>
-                    <p>Price: ${price_per_hour} €/h</p>
+                    <div class="${classes.formGroup}">
+                            <div class="${classes.text}">First Name: ${first_name}</div>
+                            <div class="${classes.text}">Last Name: ${last_name}</div>
+                            <div class="${classes.text}">Phone Number: ${phone_number}</div>
+                            <div class="${classes.text}">Price: ${price_per_hour} €/h</div>
+                            <label class="${classes.label}" htmlFor="startTime">Start Time:</label>
+                            <input class="${classes.input}" type="datetime-local" id="startTime" name="startTime" required />
+                        </div>
+                        <div class="${classes.formGroup}">
+                            <label class="${classes.label}" htmlFor="endTime">End Time:</label>
+                            <input class="${classes.input}" type="datetime-local" id="endTime" name="endTime" required />
+                        </div>
                     <button class="take-button ${classes.takeButton}">Take</button>
                 `;
 
@@ -149,10 +157,16 @@ const Content = ({ selectedOption }) => {
                         // Handle the "Take" button click
                         const takeButton = infoWindowContent.querySelector(".take-button");
                         takeButton.addEventListener("click", () => {
+
+                            const startTime = infoWindowContent.querySelector("#startTime").value;
+                            const endTime = infoWindowContent.querySelector("#endTime").value;
+
                             // Send a POST request to update scooter availability
                             axios.post("http://localhost:5000/update-scooter", {
                                 first_name: first_name,
                                 last_name: last_name,
+                                start_time: startTime,
+                                end_time: endTime,
                             })
                                 .then((response) => {
                                     if (response.status === 200) {
@@ -199,7 +213,7 @@ const Content = ({ selectedOption }) => {
                     });
 
                     // Extract first name, last name, and phone number
-                    const { first_name, last_name, phone_number, price_per_hour } = el;
+                    const { first_name, last_name} = el;
 
                     // Create a div element for the InfoWindow content
                     const infoWindowContent = document.createElement("div");
@@ -231,7 +245,9 @@ const Content = ({ selectedOption }) => {
                             <label class="${classes.label}" htmlFor="endTime">End Time:</label>
                             <input class="${classes.input}" type="datetime-local" id="endTime" name="endTime" required />
                         </div>
+                        <div class="${classes.centerButton}">
                         <button class="reserve-button ${classes.takeButton}">Reserve</button>
+                        </div>
                     </form>
                     `;
                     infoWindowContent.appendChild(form);
@@ -300,7 +316,7 @@ const Content = ({ selectedOption }) => {
                 console.error("Geolocation is not available in this browser.");
             }
         }
-    }, []);
+    }, [userLocation]);
 
     // fetch scooter data and set variable for loaded data true
     useEffect(() => {
@@ -326,7 +342,7 @@ const Content = ({ selectedOption }) => {
             initGoogleMap(userLocation.latitude, userLocation.longitude);
             setMapInitialized(true);
         }
-    }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMap]);
+    }, [selectedOption, userLocation, scooterDataLoaded, mapInitialized, initGoogleMap]);
 
     // initialize google map when user location and scooter data are fetched for reserving a scooter
     useEffect(() => {
@@ -334,7 +350,7 @@ const Content = ({ selectedOption }) => {
             initGoogleMapReserve(userLocation.latitude, userLocation.longitude);
             setrMapInitialized(true);
         }
-    }, [userLocation, scooterDataLoaded, mapInitialized, initGoogleMapReserve]);
+    }, [selectedOption, userLocation, scooterDataLoaded, mapInitialized, initGoogleMapReserve]);
 
     return (
         <div style={{position:"absolute", top:"0vh", left: "0vh", width:"100%", zIndex:"1"}}>

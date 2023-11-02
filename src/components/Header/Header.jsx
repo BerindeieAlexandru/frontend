@@ -1,6 +1,6 @@
 import React from "react";
 import useStyles from "./headerStyle";
-import {Paper, Typography} from "@mui/material";
+import {Typography} from "@mui/material";
 
 const Header = () => {
     const classes = useStyles();

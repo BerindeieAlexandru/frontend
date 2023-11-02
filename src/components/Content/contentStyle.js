@@ -43,6 +43,19 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid #ccc",
         borderRadius: theme.spacing(0.5),
     },
+    text: {
+        marginBottom: theme.spacing(2),
+        fontWeight: "bold",
+    },
+    info: {
+        display: "flex",
+        flexDirection: "column",
+    },
+    centerButton: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
 }));
 
 export default useStyles;
