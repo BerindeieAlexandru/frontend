@@ -112,6 +112,8 @@ const Content = ({ selectedOption }) => {
                     infoWindowContent.classList.add(classes.infoWindowContent);
                     infoWindowContent.innerHTML = `
                     <div class="${classes.formGroup}">
+                            <input type="hidden" name="ofirst_name" id="ofirst_name" value="${first_name}" />
+                            <input type="hidden" name="olast_name" id="olast_name" value="${last_name}" />
                             <div class="${classes.text}">First Name: ${first_name}</div>
                             <div class="${classes.text}">Last Name: ${last_name}</div>
                             <div class="${classes.text}">Phone Number: ${phone_number}</div>
@@ -144,9 +146,13 @@ const Content = ({ selectedOption }) => {
 
                             const startTime = infoWindowContent.querySelector("#startTime").value;
                             const endTime = infoWindowContent.querySelector("#endTime").value;
+                            const o_fname = infoWindowContent.querySelector("#ofirst_name").value;
+                            const o_lname = infoWindowContent.querySelector("#olast_name").value;
 
                             // Send a POST request to update scooter availability
                             axios.post("http://localhost:5000/update-scooter", {
+                                owner_first_name: o_fname,
+                                owner_last_name: o_lname,
                                 first_name: first_name,
                                 last_name: last_name,
                                 start_time: startTime,
