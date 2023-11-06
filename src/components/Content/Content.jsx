@@ -54,7 +54,7 @@ const Content = ({ selectedOption }) => {
             price: rentData.price,
         };
 
-        axios.post("http://localhost:5000/add-scooter", dataToSend)
+        axios.post("https://b059-79-114-122-22.ngrok.io/add-scooter", dataToSend)
             .then((response) => {
                 // console.log(response.data);
             })
@@ -150,7 +150,7 @@ const Content = ({ selectedOption }) => {
                             const o_lname = infoWindowContent.querySelector("#olast_name").value;
 
                             // Send a POST request to update scooter availability
-                            axios.post("http://localhost:5000/update-scooter", {
+                            axios.post("https://b059-79-114-122-22.ngrok.io/update-scooter", {
                                 owner_first_name: o_fname,
                                 owner_last_name: o_lname,
                                 first_name: first_name,
@@ -266,7 +266,7 @@ const Content = ({ selectedOption }) => {
                                 };
                                 console.log(dataToSend);
                                 //to add in a db the reservation
-                                axios.post("http://localhost:5000/add-reservation", dataToSend)
+                                axios.post("https://b059-79-114-122-22.ngrok.io/add-reservation", dataToSend)
                                     .then((response) => {
                                         if (response.status === 201) {
                                             // Close the InfoWindow
@@ -310,7 +310,7 @@ const Content = ({ selectedOption }) => {
 
     // fetch scooter data and set variable for loaded data true
     useEffect(() => {
-        fetch("http://localhost:5000/available-scooters")
+        fetch("https://b059-79-114-122-22.ngrok.io/available-scooters")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
