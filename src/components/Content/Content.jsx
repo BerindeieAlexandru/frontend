@@ -11,6 +11,9 @@ const Content = ({ selectedOption }) => {
     //style data
     const classes = useStyles();
 
+    // store map instance
+    const [map, setMap] = useState(null);
+
     // user location
     const [userLocation, setUserLocation] = useState(null);
 
@@ -54,7 +57,7 @@ const Content = ({ selectedOption }) => {
             price: rentData.price,
         };
 
-        axios.post("https://b059-79-114-122-22.ngrok.io/add-scooter", dataToSend)
+        axios.post("http://localhost:5000/add-scooter", dataToSend)
             .then((response) => {
                 // console.log(response.data);
             })
@@ -65,11 +68,11 @@ const Content = ({ selectedOption }) => {
 
     // initialize google map for finding a scooter
     const initGoogleMap = (latitude, longitude) => {
-        const map = new window.google.maps.Map(document.getElementById("map"), {
-            center: { lat: latitude, lng: longitude },
-            zoom: 15,
-        });
-            setMarkers(map, scooterdata);
+            const map = new window.google.maps.Map(document.getElementById("map"), {
+                center: { lat: latitude, lng: longitude },
+                zoom: 15,
+            });
+        setMarkers(map, scooterdata);
     };
 
     // initialize google map for reserving a scooter
@@ -150,7 +153,7 @@ const Content = ({ selectedOption }) => {
                             const o_lname = infoWindowContent.querySelector("#olast_name").value;
 
                             // Send a POST request to update scooter availability
-                            axios.post("https://b059-79-114-122-22.ngrok.io/update-scooter", {
+                            axios.post("http://localhost:5000/update-scooter", {
                                 owner_first_name: o_fname,
                                 owner_last_name: o_lname,
                                 first_name: first_name,
@@ -266,7 +269,7 @@ const Content = ({ selectedOption }) => {
                                 };
                                 console.log(dataToSend);
                                 //to add in a db the reservation
-                                axios.post("https://b059-79-114-122-22.ngrok.io/add-reservation", dataToSend)
+                                axios.post("http://localhost:5000/add-reservation", dataToSend)
                                     .then((response) => {
                                         if (response.status === 201) {
                                             // Close the InfoWindow
@@ -308,9 +311,8 @@ const Content = ({ selectedOption }) => {
         }
     }, [userLocation]);
 
-    // fetch scooter data and set variable for loaded data true
-    useEffect(() => {
-        fetch("https://b059-79-114-122-22.ngrok.io/available-scooters")
+    const fetchScooterData = () => {
+        fetch("http://localhost:5000/available-scooters")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
@@ -318,12 +320,23 @@ const Content = ({ selectedOption }) => {
                 return response.json();
             })
             .then((data) => {
-                setScooterdata(data);
-                setScooterDataLoaded(true);
+                    setScooterdata(data);
+                    setScooterDataLoaded(true);
             })
             .catch((error) => {
                 console.error("Error fetching reservation data:", error);
             });
+    };
+
+    // Fetch scooter data
+    useEffect(() => {
+        const fetchInterval = setInterval(() => {
+            fetchScooterData();
+        }, 10000);
+
+        return () => {
+            clearInterval(fetchInterval);
+        };
     }, []);
 
     // initialize google map when user location and scooter data are fetched for finding a scooter
