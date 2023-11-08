@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import {CircularProgress} from "@mui/material";
-import axios from "axios";
 import useStyles from "./contentStyle";
 import Form from "../Form/Form";
+import {addScooter, addReservation, updateScooter} from "../../api";
 
 import customMarkerIcon from "./scooter1.png";
 const customMarkerIconSize = new window.google.maps.Size(40, 40);
 const Content = ({ selectedOption }) => {
+
+    //base url for api calls
+    const baseURL = 'http://localhost:5000';
 
     //style data
     const classes = useStyles();
@@ -57,7 +60,7 @@ const Content = ({ selectedOption }) => {
             price: rentData.price,
         };
 
-        axios.post("http://localhost:5000/add-scooter", dataToSend)
+        addScooter(dataToSend)
             .then((response) => {
                 // console.log(response.data);
             })
@@ -152,8 +155,7 @@ const Content = ({ selectedOption }) => {
                             const o_fname = infoWindowContent.querySelector("#ofirst_name").value;
                             const o_lname = infoWindowContent.querySelector("#olast_name").value;
 
-                            // Send a POST request to update scooter availability
-                            axios.post("http://localhost:5000/update-scooter", {
+                            updateScooter({
                                 owner_first_name: o_fname,
                                 owner_last_name: o_lname,
                                 first_name: first_name,
@@ -269,7 +271,7 @@ const Content = ({ selectedOption }) => {
                                 };
                                 console.log(dataToSend);
                                 //to add in a db the reservation
-                                axios.post("http://localhost:5000/add-reservation", dataToSend)
+                                addReservation(dataToSend)
                                     .then((response) => {
                                         if (response.status === 201) {
                                             // Close the InfoWindow
@@ -312,7 +314,7 @@ const Content = ({ selectedOption }) => {
     }, [userLocation]);
 
     const fetchScooterData = () => {
-        fetch("http://localhost:5000/available-scooters")
+        fetch(baseURL + "/available-scooters")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Network response was not ok: ${response.status}`);
@@ -332,7 +334,7 @@ const Content = ({ selectedOption }) => {
     useEffect(() => {
         const fetchInterval = setInterval(() => {
             fetchScooterData();
-        }, 10000);
+        }, 20000);
 
         return () => {
             clearInterval(fetchInterval);
